@@ -27,17 +27,15 @@ export const registerUser = async(req, res) =>{
 
         // check if required fields are correct
 
-        if(!name || !email || !password){
-
-            return res.status(400).jspn({message:' Missing required fields'})
-        }
+       if(!name || !email || !password){
+    return res.status(400).jspn({message:' Missing required fields'}) // CRASHES HERE
+    }
 
         const user = await User.findOne({email})
 
-        if(user){
-
-            return res.status(400).jspn({message:' User already exists'})
-        }
+    if(user){
+    return res.status(400).jspn({message:' User already exists'}) // CRASHES HERE
+    }
 
 
         // create new user
@@ -91,12 +89,23 @@ export const loginUser = async(req, res) =>{
 
         
 
-        if(!user.comparePassword(password)){
+       // INSIDE registerUser:
+    if(!name || !email || !password){
+    return res.status(400).json({message:' Missing required fields'})
+    }
 
-            return res.status(400).jspn({message:' User already exists'})
-        }
+    const user = await User.findOne({email})
+
+    if(user){
+    return res.status(400).json({message:' User already exists'})
+    }
 
 
+// INSIDE loginUser:
+if(!user.comparePassword(password)){
+    // Fixed typo and fixed the misleading error message
+    return res.status(400).json({message:' Invalid password'}) 
+}
         // create new user
 
 
